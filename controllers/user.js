@@ -6,6 +6,7 @@ const User = require("../models/user");
 const ConflictError = require("../utils/errors/ConflictError");
 const NotFoundError = require("../utils/errors/NotFoundError");
 const BadRequestError = require("../utils/errors/BadRequestError");
+
 module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
 
