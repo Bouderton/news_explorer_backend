@@ -22,34 +22,63 @@ module.exports.getCurrentUser = (req, res, next) => {
     });
 };
 
+// Old controller
+
+// module.exports.createUser2 = (req, res, next) => {
+//   const { username, email, password } = req.body;
+
+//   // Hashing the Password and Creating User Email
+//   User.findOne({ email }).then((user) => {
+//     if (user) {
+//       return next(new ConflictError("User already exists"));
+//     }
+//     return bcrypt
+//       .hash(password, 10)
+//       .then((hash) => {
+//         return User.create({
+//           email,
+//           password: hash,
+//           username,
+//         })
+//           .then(() => res.status(200).send({ email, username }))
+//           .catch((err) => {
+//             console.error(err);
+//             if (err.name === "ValidationError") {
+//               return next(new BadRequestError("Invalid Data"));
+//             }
+//             return next(err);
+//           });
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         return next(err);
+//       });
+//   });
+// };
+
 module.exports.createUser = (req, res, next) => {
   const { username, email, password } = req.body;
 
-  // Hashing the Password and Creating User Email
-  User.findOne({ email }).then((user) => {
-    if (user) {
-      return next(new ConflictError("User already exists"));
-    }
-    return bcrypt
-      .hash(password, 10)
-      .then((hash) => {
-        User.create({
-          email,
-          password: hash,
-          username,
-        })
-          .then(() => res.status(200).send({ email, username }))
-          .catch((err) => {
-            console.error(err);
-            if (err.name === "ValidationError") {
-              return next(new BadRequestError("Invalid Data"));
-            }
-            return next(err);
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-        return next(err);
-      });
-  });
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return next(new ConflictError("User already exists!"));
+      }
+      return bcrypt.hash(password, 10);
+    })
+    .then((hash) => {
+      return User.create({ email, password: hash, username });
+    })
+    .then(() => res.status(200).send({ email, username }))
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "ValidationError") {
+        return next(new BadRequestError("Invalid Data"));
+      }
+      return next(err);
+    })
+    .catch((err) => {
+      console.error(err);
+      return next(err);
+    });
 };
