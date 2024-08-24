@@ -1,14 +1,16 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const {JWT_SECRET} = require
+const { JWT_SECRET } = require("../utils/config");
 const User = require("../models/user");
 
 const ConflictError = require("../utils/errors/ConflictError");
 const NotFoundError = require("../utils/errors/NotFoundError");
 const BadRequestError = require("../utils/errors/BadRequestError");
+const UnauthorizedError = require("../utils/errors/UnauthorizedError");
 
 module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
+  console.log(userId);
 
   User.findById(userId)
     .orFail()
@@ -79,6 +81,31 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
+      return next(err);
+    });
+};
+
+// Logging in user
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    next(new BadRequestError("Email and password feilds are required"));
+  }
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.send({ token });
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.message === "Incorrect email or password") {
+        return next(new UnauthorizedError("Unauthorized"));
+      }
       return next(err);
     });
 };
