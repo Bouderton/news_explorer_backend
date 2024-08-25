@@ -109,3 +109,26 @@ module.exports.login = (req, res, next) => {
       return next(err);
     });
 };
+
+// Edit profile
+
+module.exports.editProfile = (req, res, next) => {
+  const { username } = req.body;
+  const userId = req.user._id;
+
+  return User.findByIdAndUpdate(userId, username)
+    .orFail()
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("User not found"));
+      }
+      if (err.name === "ValidationError") {
+        return next(new BadRequestError("Invalid Data"));
+      }
+      return next(err);
+    });
+};
