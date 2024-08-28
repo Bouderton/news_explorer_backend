@@ -4,11 +4,11 @@ const {
   saveArticle,
   unsaveArticle,
 } = require("../controllers/article");
-const { validateId } = require("../middlewares/validation");
+const { validateArticle } = require("../middlewares/validation");
 
 router.get("/", getArticles);
 
-router.post("/saved-articles", saveArticle);
+router.post("/saved-articles", validateArticle, saveArticle);
 
 router.delete("/saved-articles", unsaveArticle);
 

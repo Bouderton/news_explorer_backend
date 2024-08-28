@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 const articleSchema = new mongoose.Schema({
+  author: {
+    type: String,
+    required: true,
+    maxLength: 30,
+  },
   title: {
     type: String,
     required: true,
