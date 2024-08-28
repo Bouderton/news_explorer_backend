@@ -4,9 +4,13 @@ const { NotFoundError } = require("../utils/errors/NotFoundError");
 const userRouter = require("./user");
 const { auth } = require("../middlewares/auth");
 
+const articlesRouter = require("./article");
+
 router.post("/signup", createUser);
 
 router.post("/signin", login);
+
+router.use("/articles", articlesRouter);
 
 router.use(auth);
 

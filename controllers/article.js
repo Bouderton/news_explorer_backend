@@ -33,7 +33,7 @@ module.exports.saveArticle = (req, res, next) => {
     });
 };
 
-module.exports.unsaveArticles = (req, res, next) => {
+module.exports.unsaveArticle = (req, res, next) => {
   Article.findByIdAndRemove({})
     .then((res) => {
       res.status(200).send("Article Deleted");
