@@ -15,17 +15,17 @@ module.exports.getArticles = (req, res, next) => {
 };
 
 module.exports.saveArticle = (req, res, next) => {
-  const { author, name, imageURL, description } = req.body;
+  const { author, title, imageUrl, description } = req.body;
   Article.create({
     author,
-    name,
-    imageURL,
+    title,
+    imageUrl,
     description,
     owner: req.user._id,
   })
     .then((article) => res.status(200).send(`Article Saved ${article}`))
     .catch((err) => {
-      console.err(err);
+      console.log(err);
       if (err.name === "ValidationError") {
         return next(new BadRequestError("Invalid Data"));
       }

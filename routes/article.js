@@ -5,8 +5,11 @@ const {
   unsaveArticle,
 } = require("../controllers/article");
 const { validateArticle } = require("../middlewares/validation");
+const { auth } = require("../middlewares/auth");
 
-router.get("/", getArticles);
+router.get("/saved-articles", getArticles);
+
+router.use(auth);
 
 router.post("/saved-articles", validateArticle, saveArticle);
 

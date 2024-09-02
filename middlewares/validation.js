@@ -1,5 +1,7 @@
 const { Joi, celebrate } = require("celebrate");
 
+const validator = require("validator");
+
 // Validating a URL
 const validateURL = (value, helpers) => {
   if (validator.isURL(value)) {
@@ -66,11 +68,16 @@ module.exports.validateArticle = celebrate({
       "string.max": 'The maximum length of the "title" field is 50',
       "string.empty": 'The "name" field must be filled in',
     }),
+    author: Joi.string().required().min(6).max(25).messages({
+      "string.empty": "This article needs an author",
+      "string.min": `Ths minimum length of the 'author' field is 6`,
+      "string.max": `The maximum lenght of the 'author' field is 25`,
+    }),
     imageUrl: Joi.string().required().custom(validateURL).messages({
       "string.empty": 'The "imageUrl" field must be filled in',
       "string.uri": 'the "imageUrl" field must be a valid url',
     }),
-    desciption: Joi.string().required().max(200).messages({
+    description: Joi.string().required().max(200).messages({
       "string.empty": "This article has no description",
     }),
   }),
