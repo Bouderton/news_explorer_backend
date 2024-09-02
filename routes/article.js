@@ -4,15 +4,15 @@ const {
   saveArticle,
   unsaveArticle,
 } = require("../controllers/article");
-const { validateArticle } = require("../middlewares/validation");
+const { validateArticle, validateId } = require("../middlewares/validation");
 const { auth } = require("../middlewares/auth");
 
-router.get("/saved-articles", getArticles);
+router.get("/", validateArticle, getArticles);
 
 router.use(auth);
 
-router.post("/saved-articles", validateArticle, saveArticle);
+router.post("/:articleId", validateId, saveArticle);
 
-router.delete("/saved-articles", unsaveArticle);
+router.delete("/:articleId", validateId, unsaveArticle);
 
 module.exports = router;

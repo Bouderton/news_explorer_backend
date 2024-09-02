@@ -34,14 +34,34 @@ module.exports.saveArticle = (req, res, next) => {
 };
 
 module.exports.unsaveArticle = (req, res, next) => {
-  Article.findByIdAndRemove({})
-    .then((res) => {
-      res.status(200).send("Article Deleted");
+  console.log(req.params);
+  const { articleId } = req.params;
+
+  Article.findById({ _id: articleId })
+    .orFail()
+    .then((item) => {
+      // No item = No delete
+      if (!item) {
+        return next(new NotFoundError("Article does not exist."));
+      }
+      // Actually deleting the item
+      return Article.findByIdAndRemove({ _id: articleId })
+        .then(() =>
+          res.status(200).send({ message: "Article Successfully Unsaved" })
+        )
+        .catch((err) => {
+          console.error(err);
+          next(err);
+        });
     })
     .catch((err) => {
-      console.err(err);
-      if (err.name === "ValidationError") {
-        return next(new BadRequest("Invalid Data"));
+      console.error(err);
+      if (err.name === "CastError") {
+        return next(new BadRequestError("Invalid ID"));
       }
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("Article does not exist"));
+      }
+      return next(err);
     });
 };

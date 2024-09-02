@@ -44,7 +44,7 @@ module.exports.validateReturningUser = celebrate({
 // ID Validation
 module.exports.validateId = celebrate({
   params: Joi.object().keys({
-    itemId: Joi.string().hex().length(24).required(),
+    articleId: Joi.string().hex().length(24).required(),
   }),
 });
 
