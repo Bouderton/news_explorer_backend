@@ -10,7 +10,7 @@ const UnauthorizedError = require("../utils/errors/UnauthorizedError");
 
 module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
-  console.log(userId);
+  // console.log(userId);
 
   User.findById(userId)
     .orFail()
@@ -27,7 +27,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 // Old controller
 
 // module.exports.createUser2 = (req, res, next) => {
-//   const { username, email, password } = req.body;
+//   const { name, email, password } = req.body;
 
 //   // Hashing the Password and Creating User Email
 //   User.findOne({ email }).then((user) => {
@@ -40,9 +40,9 @@ module.exports.getCurrentUser = (req, res, next) => {
 //         return User.create({
 //           email,
 //           password: hash,
-//           username,
+//           name,
 //         })
-//           .then(() => res.status(200).send({ email, username }))
+//           .then(() => res.status(200).send({ email, name }))
 //           .catch((err) => {
 //             console.error(err);
 //             if (err.name === "ValidationError") {
@@ -59,7 +59,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 // };
 
 module.exports.createUser = (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { name, email, password } = req.body;
 
   User.findOne({ email })
     .then((user) => {
@@ -69,9 +69,9 @@ module.exports.createUser = (req, res, next) => {
       return bcrypt.hash(password, 10);
     })
     .then((hash) => {
-      return User.create({ email, password: hash, username });
+      return User.create({ email, password: hash, name });
     })
-    .then(() => res.status(200).send({ email, username }))
+    .then(() => res.status(200).send({ email, name }))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
@@ -113,10 +113,10 @@ module.exports.login = (req, res, next) => {
 // Edit profile
 
 module.exports.editProfile = (req, res, next) => {
-  const { username } = req.body;
+  const { name } = req.body;
   const userId = req.user._id;
 
-  return User.findByIdAndUpdate(userId, username)
+  return User.findByIdAndUpdate(userId, name)
     .orFail()
     .then((user) => {
       res.send(user);
