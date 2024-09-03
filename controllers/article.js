@@ -5,7 +5,7 @@ const BadRequestError = require("../utils/errors/BadRequestError");
 const ForbiddenError = require("../utils/errors/ForbiddenError");
 const article = require("../models/article");
 
-// get all articles from db
+// Get all articles from db
 module.exports.getArticles = (req, res, next) => {
   Article.find({ owner: req.user._id })
     .then((articles) => res.status(200).send(articles))
@@ -41,7 +41,6 @@ module.exports.saveArticle = (req, res, next) => {
 };
 
 module.exports.unsaveArticle = (req, res, next) => {
-  console.log(req.user._id);
   const { articleId } = req.params;
   const userId = req.user._id;
   // finding the article by ID

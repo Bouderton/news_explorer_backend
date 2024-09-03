@@ -8,9 +8,9 @@ const NotFoundError = require("../utils/errors/NotFoundError");
 const BadRequestError = require("../utils/errors/BadRequestError");
 const UnauthorizedError = require("../utils/errors/UnauthorizedError");
 
+// Get current user
 module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
-  // console.log(userId);
 
   User.findById(userId)
     .orFail()
@@ -24,40 +24,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     });
 };
 
-// Old controller
-
-// module.exports.createUser2 = (req, res, next) => {
-//   const { name, email, password } = req.body;
-
-//   // Hashing the Password and Creating User Email
-//   User.findOne({ email }).then((user) => {
-//     if (user) {
-//       return next(new ConflictError("User already exists"));
-//     }
-//     return bcrypt
-//       .hash(password, 10)
-//       .then((hash) => {
-//         return User.create({
-//           email,
-//           password: hash,
-//           name,
-//         })
-//           .then(() => res.status(200).send({ email, name }))
-//           .catch((err) => {
-//             console.error(err);
-//             if (err.name === "ValidationError") {
-//               return next(new BadRequestError("Invalid Data"));
-//             }
-//             return next(err);
-//           });
-//       })
-//       .catch((err) => {
-//         console.error(err);
-//         return next(err);
-//       });
-//   });
-// };
-
+// Create new user
 module.exports.createUser = (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -116,7 +83,11 @@ module.exports.editProfile = (req, res, next) => {
   const { name } = req.body;
   const userId = req.user._id;
 
-  return User.findByIdAndUpdate(userId, { name }, { new: true, runValidators: true })
+  return User.findByIdAndUpdate(
+    userId,
+    { name },
+    { new: true, runValidators: true }
+  )
     .orFail()
     .then((user) => {
       res.send(user);
