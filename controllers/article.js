@@ -15,6 +15,7 @@ module.exports.getArticles = (req, res, next) => {
     });
 };
 
+// Saving/creating the article
 module.exports.saveArticle = (req, res, next) => {
   const { keyword, author, title, text, date, imageUrl } = req.body;
 
@@ -43,9 +44,11 @@ module.exports.unsaveArticle = (req, res, next) => {
   console.log(req.user._id);
   const { articleId } = req.params;
   const userId = req.user._id;
+  // finding the article by ID
   Article.findById({ _id: articleId })
     .orFail()
     .then((article) => {
+      // If article owner and current user Id don't match, forbid it
       if (!article.owner.equals(userId).toString()) {
         return next(
           new ForbiddenError("You are not the owner of this article")
@@ -54,6 +57,7 @@ module.exports.unsaveArticle = (req, res, next) => {
       if (!article) {
         return next(new NotFoundError("Article Not Found"));
       }
+      // Actually removing the article
       return Article.findByIdAndRemove({ _id: articleId })
         .orFail()
         .then((article) => {
