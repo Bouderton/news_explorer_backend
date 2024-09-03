@@ -11,7 +11,7 @@ router.get("/", validateArticle, getArticles);
 
 router.use(auth);
 
-router.put("/:articleId/saved", validateId, saveArticle);
+router.post("/", saveArticle);
 
 router.delete("/:articleId/saved", validateId, unsaveArticle);
 

@@ -13,12 +13,16 @@ const articleSchema = new mongoose.Schema({
     minLength: 5,
     maxLength: 50,
   },
-  description: {
+  text: {
     type: String,
     required: true,
     maxLength: 200,
   },
   keyword: {
+    type: String,
+    required: true,
+  },
+  date: {
     type: String,
     required: true,
   },
@@ -32,12 +36,12 @@ const articleSchema = new mongoose.Schema({
       message: "You must enter a valid URL",
     },
   },
-  saved: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+  // saved: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "User",
+  //   },
+  // ],
   owner: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "User",
