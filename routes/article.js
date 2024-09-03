@@ -13,6 +13,6 @@ router.use(auth);
 
 router.post("/", saveArticle);
 
-router.delete("/:articleId/saved", validateId, unsaveArticle);
+router.delete("/:articleId", validateId, unsaveArticle);
 
 module.exports = router;

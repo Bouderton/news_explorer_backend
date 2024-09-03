@@ -17,58 +17,59 @@ module.exports.getArticles = (req, res, next) => {
 
 module.exports.saveArticle = (req, res, next) => {
   const { keyword, author, title, text, date, imageUrl } = req.body;
-  const owner = req.user._id;
+
   console.log(req.body);
 
-  Article.create({ author, title, keyword, imageUrl, date, text, owner })
+  Article.create({
+    author,
+    title,
+    keyword,
+    imageUrl,
+    date,
+    text,
+    owner: req.user._id,
+  })
     .then((article) => res.send(article))
     .catch((err) => {
       console.error(err);
-      if (err.name === "CastError") {
-        return next(
-          new BadRequestError("Invalid Data. Failed to save article")
-        );
-      }
-      if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("Article not found or is incomplete"));
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid Data"));
       }
       next(err);
     });
 };
 
 module.exports.unsaveArticle = (req, res, next) => {
+  console.log(req.user._id);
   const { articleId } = req.params;
   const userId = req.user._id;
-  Article.findById({ articleId })
-    .select("+owner")
-    .orFail(() => new NotFoundError("Article not found"))
+  Article.findById({ _id: articleId })
+    .orFail()
     .then((article) => {
-      if (userId !== article.owner.toString()) {
+      if (!article.owner.equals(userId).toString()) {
         return next(
           new ForbiddenError("You are not the owner of this article")
         );
       }
-      return Article.findByIdAndRemove({ articleId })
-        .orFail(() => new NotFoundError("Article not found"))
+      if (!article) {
+        return next(new NotFoundError("Article Not Found"));
+      }
+      return Article.findByIdAndRemove({ _id: articleId })
+        .orFail()
         .then((article) => {
-          res.send({ message: `Article removed ${article}` });
+          res.send({ message: `Article removed: ${article.title}` });
         })
         .catch((err) => {
           console.error(err);
-          next(err);
+          if (err.name === "DocumentNotFoundError") {
+            return next(new NotFoundError("article not found"));
+          }
+          if (err.name === "CastError") {
+            return next(
+              new BadRequestError("Invalid Data. Failed to dislike article")
+            );
+          }
+          return next(err);
         });
     });
 };
-
-// .catch((err) => {
-//   console.error(err);
-//   if (err.name === "DocumentNotFoundError") {
-//     return next(new NotFoundError("article not found"));
-//   }
-//   if (err.name === "CastError") {
-//     return next(
-//       new BadRequestError("Invalid Data. Failed to dislike article")
-//     );
-//   }
-//   return next(err);
-// });
