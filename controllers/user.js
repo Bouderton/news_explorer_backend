@@ -116,7 +116,7 @@ module.exports.editProfile = (req, res, next) => {
   const { name } = req.body;
   const userId = req.user._id;
 
-  return User.findByIdAndUpdate(userId, name)
+  return User.findByIdAndUpdate(userId, { name }, { new: true, runValidators: true })
     .orFail()
     .then((user) => {
       res.send(user);
