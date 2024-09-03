@@ -15,52 +15,45 @@ module.exports.getArticles = (req, res, next) => {
 };
 
 module.exports.saveArticle = (req, res, next) => {
-  const { author, title, imageUrl, description } = req.body;
-  Article.create({
-    author,
-    title,
-    imageUrl,
-    description,
-    owner: req.user._id,
-  })
-    .then((article) => res.status(200).send(`Article Saved ${article}`))
+  console.log(req.params._id);
+  Article.findByIdAndUpdate(
+    req.params.articleId,
+    { $addToSet: { saved: req.user._id } },
+    { new: true }
+  )
+    .orFail()
+    .then((article) => res.send(article))
     .catch((err) => {
-      console.log(err);
-      if (err.name === "ValidationError") {
-        return next(new BadRequestError("Invalid Data"));
+      console.error(err);
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("Article not found"));
       }
-      next(err);
+      if (err.name === "CastError") {
+        return next(
+          new BadRequestError("Invalid Data. Failed to save article")
+        );
+      }
+      return next(err);
     });
 };
 
 module.exports.unsaveArticle = (req, res, next) => {
-  console.log(req.params);
-  const { articleId } = req.params;
-
-  Article.findById({ _id: articleId })
+  Article.findByIdAndUpdate(
+    req.params.articleId,
+    { $pull: { saved: req.user._id } },
+    { new: true }
+  )
     .orFail()
-    .then((item) => {
-      // No item = No delete
-      if (!item) {
-        return next(new NotFoundError("Article does not exist."));
-      }
-      // Actually deleting the item
-      return Article.findByIdAndRemove({ _id: articleId })
-        .then(() =>
-          res.status(200).send({ message: "Article Successfully Unsaved" })
-        )
-        .catch((err) => {
-          console.error(err);
-          next(err);
-        });
-    })
+    .then((article) => res.send({ message: "Article Unsaved", article }))
     .catch((err) => {
       console.error(err);
-      if (err.name === "CastError") {
-        return next(new BadRequestError("Invalid ID"));
-      }
       if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("Article does not exist"));
+        return next(new NotFoundError("article not found"));
+      }
+      if (err.name === "CastError") {
+        return next(
+          new BadRequestError("Invalid Data. Failed to dislike article")
+        );
       }
       return next(err);
     });

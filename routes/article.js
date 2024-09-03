@@ -11,8 +11,8 @@ router.get("/", validateArticle, getArticles);
 
 router.use(auth);
 
-router.post("/:articleId", validateId, saveArticle);
+router.put("/:articleId/saved", validateId, saveArticle);
 
-router.delete("/:articleId", validateId, unsaveArticle);
+router.delete("/:articleId/saved", validateId, unsaveArticle);
 
 module.exports = router;
