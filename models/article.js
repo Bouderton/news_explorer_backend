@@ -18,6 +18,10 @@ const articleSchema = new mongoose.Schema({
     required: true,
     maxLength: 200,
   },
+  keyword: {
+    type: String,
+    required: true,
+  },
   imageUrl: {
     type: String,
     required: true,
