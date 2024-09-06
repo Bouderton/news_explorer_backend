@@ -26,7 +26,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 // Create new user
 module.exports.createUser = (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
 
   User.findOne({ email })
     .then((user) => {
@@ -36,9 +36,9 @@ module.exports.createUser = (req, res, next) => {
       return bcrypt.hash(password, 10);
     })
     .then((hash) => {
-      return User.create({ email, password: hash, name });
+      return User.create({ email, password: hash, username });
     })
-    .then(() => res.status(200).send({ email, name }))
+    .then(() => res.status(200).send({ email, username }))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
@@ -80,12 +80,12 @@ module.exports.login = (req, res, next) => {
 // Edit profile
 
 module.exports.editProfile = (req, res, next) => {
-  const { name } = req.body;
+  const { username } = req.body;
   const userId = req.user._id;
 
   return User.findByIdAndUpdate(
     userId,
-    { name },
+    { username },
     { new: true, runValidators: true }
   )
     .orFail()
