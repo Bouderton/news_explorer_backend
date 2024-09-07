@@ -77,8 +77,8 @@ module.exports.validateArticle = celebrate({
       "string.empty": 'The "imageUrl" field must be filled in',
       "string.uri": 'the "imageUrl" field must be a valid url',
     }),
-    text: Joi.string().required().max(200).messages({
-      "string.empty": "This article has no text",
+    description: Joi.string().required().max(200).messages({
+      "string.empty": "This article has no description",
     }),
     keyword: Joi.string().required().messages({
       "string.empty": "This article has no keyword",

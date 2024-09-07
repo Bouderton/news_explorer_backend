@@ -17,7 +17,7 @@ module.exports.getArticles = (req, res, next) => {
 
 // Saving/creating the article
 module.exports.saveArticle = (req, res, next) => {
-  const { keyword, author, title, text, date, imageUrl } = req.body;
+  const { keyword, author, title, description, date, imageUrl } = req.body;
 
   console.log(req.body);
 
@@ -27,10 +27,10 @@ module.exports.saveArticle = (req, res, next) => {
     keyword,
     imageUrl,
     date,
-    text,
+    description,
     owner: req.user._id,
   })
-    .then((article) => res.send(article))
+    .then((article) => res.status(200).send(article))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
