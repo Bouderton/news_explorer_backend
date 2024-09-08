@@ -20,6 +20,6 @@ router.use(auth);
 
 router.use("/users", userRouter);
 
-// router.use((req, res, next) => next(new NotFoundError("Route not found")));
+router.use((req, res, next) => next(new NotFoundError("Route not found")));
 
 module.exports = router;

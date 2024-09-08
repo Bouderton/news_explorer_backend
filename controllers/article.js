@@ -7,7 +7,7 @@ const article = require("../models/article");
 
 // Get all articles from db
 module.exports.getArticles = (req, res, next) => {
-  Article.find({ owner: req.user._id })
+  Article.find({})
     .then((articles) => res.status(200).send(articles))
     .catch((err) => {
       console.error(err);

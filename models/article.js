@@ -10,8 +10,6 @@ const articleSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    minLength: 5,
-    maxLength: 50,
   },
   description: {
     type: String,
