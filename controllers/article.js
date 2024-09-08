@@ -17,7 +17,7 @@ module.exports.getArticles = (req, res, next) => {
 
 // Saving/creating the article
 module.exports.saveArticle = (req, res, next) => {
-  const { keyword, author, title, description, date, imageUrl } = req.body;
+  const { keyword, author, title, description, date, urlToImage } = req.body;
 
   console.log(req.body);
 
@@ -25,7 +25,7 @@ module.exports.saveArticle = (req, res, next) => {
     author,
     title,
     keyword,
-    imageUrl,
+    urlToImage,
     date,
     description,
     owner: req.user._id,

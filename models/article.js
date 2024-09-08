@@ -24,7 +24,7 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  imageUrl: {
+  urlToImage: {
     type: String,
     required: true,
     validate: {
