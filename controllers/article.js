@@ -3,7 +3,6 @@ const Article = require("../models/article");
 const NotFoundError = require("../utils/errors/NotFoundError");
 const BadRequestError = require("../utils/errors/BadRequestError");
 const ForbiddenError = require("../utils/errors/ForbiddenError");
-const article = require("../models/article");
 
 // Get all articles from db
 module.exports.getArticles = (req, res, next) => {
@@ -14,10 +13,10 @@ module.exports.getArticles = (req, res, next) => {
       return next(err);
     });
 };
-
 // Saving/creating the article
 module.exports.saveArticle = (req, res, next) => {
-  const { keyword, author, title, description, date, urlToImage } = req.body;
+  const { keyword, author, title, description, date, urlToImage, url } =
+    req.body;
 
   console.log(req.body);
 
@@ -27,6 +26,7 @@ module.exports.saveArticle = (req, res, next) => {
     keyword,
     urlToImage,
     date,
+    url,
     description,
     owner: req.user._id,
   })

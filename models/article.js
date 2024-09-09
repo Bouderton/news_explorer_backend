@@ -34,12 +34,15 @@ const articleSchema = new mongoose.Schema({
       message: "You must enter a valid URL",
     },
   },
-  // saved: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "User",
-  //   },
-  // ],
+  url: {
+    type: String,
+    required: true,
+    validate: {
+      validator(value) {
+        return validator.isURL(value);
+      },
+    },
+  },
   owner: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "User",
