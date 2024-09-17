@@ -4,10 +4,10 @@ const {
   saveArticle,
   unsaveArticle,
 } = require("../controllers/article");
-const { validateArticle, validateId } = require("../middlewares/validation");
+const { validateId } = require("../middlewares/validation");
 const { auth } = require("../middlewares/auth");
 
-router.get("/", validateArticle, getArticles);
+router.get("/", getArticles);
 
 router.use(auth);
 

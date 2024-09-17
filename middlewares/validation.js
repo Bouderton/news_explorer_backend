@@ -61,27 +61,29 @@ module.exports.validateUpdateUser = celebrate({
 
 // Validate Article
 
-module.exports.validateArticle = celebrate({
-  body: Joi.object().keys({
-    title: Joi.string().required().min(5).max(50).messages({
-      "string.min": 'The minimum length of the "title" field is 5',
-      "string.max": 'The maximum length of the "title" field is 50',
-      "string.empty": 'The "name" field must be filled in',
-    }),
-    author: Joi.string().required().min(6).max(25).messages({
-      "string.empty": "This article needs an author",
-      "string.min": `Ths minimum length of the 'author' field is 6`,
-      "string.max": `The maximum lenght of the 'author' field is 25`,
-    }),
-    urlToImage: Joi.string().required().custom(validateURL).messages({
-      "string.empty": 'The "urlToImage" field must be filled in',
-      "string.uri": 'the "urlToImage" field must be a valid url',
-    }),
-    description: Joi.string().required().max(200).messages({
-      "string.empty": "This article has no description",
-    }),
-    keyword: Joi.string().required().messages({
-      "string.empty": "This article has no keyword",
-    }),
-  }),
-});
+// module.exports.validateArticle = celebrate({
+//   body: Joi.object().keys({
+//     title: Joi.string().required().min(5).messages({
+//       "string.empty": 'The "title" field is empty',
+//       "string.min": "Title is too short (less than 5 characters)",
+//     }),
+//     author: Joi.string().required().min(6).max(25).messages({
+//       "string.empty": "This article needs an author",
+//       "string.min": `Ths minimum length of the 'author' field is 6`,
+//       "string.max": `The maximum lenght of the 'author' field is 25`,
+//     }),
+//     urlToImage: Joi.string().required().custom(validateURL).messages({
+//       "string.empty": 'The "urlToImage" field must be filled in',
+//       "string.uri": 'the "urlToImage" field must be a valid url',
+//     }),
+//     description: Joi.string().required().max(200).messages({
+//       "string.empty": "This article has no description",
+//     }),
+//     keyword: Joi.string().required().messages({
+//       "string.empty": "This article has no keyword",
+//     }),
+//     date: Joi.string().required().messages({
+//       "string.empty": "There is no date on this article",
+//     }),
+//   }),
+// });
